@@ -1,0 +1,80 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Document</title>
+    <link rel="stylesheet" href="../day6/bootstrap.min.css">
+    <script src="../JQuery/JQuery.mini.js"></script>
+</head>
+<body>
+    <input type="file" name="" id="file1">
+    <button id="btnUpLoad">上传文件</button>
+    <div class="progress" style="width: 400px;">
+        <div class="progress-bar progress-bar-striped active" id="percent" aria-valuenow="45" aria-valuemin="0" aria-valuemax="100" style="width: 0%">
+            0%
+        </div>
+      </div>
+    <br>
+    <img src="" alt="" id="img" width="800">
+    <div>你好吗</div>
+
+    <script>
+        // 选择按钮，绑定事件
+        var btn = document.querySelector('#btnUpLoad');
+        btn.addEventListener('click', function() {
+            // 验证是否选择了文件
+            // 并返回一个数组
+            var files = document.querySelector('#file1').files;
+            if(files.length <= 0) {
+                return alert('请选择文件！');
+            }
+            // 其他业务逻辑
+            // alert('已选择文件');
+
+            // 创建FromData对象，向FromData添加数据
+            var data = new FormData();
+            data.append('avatar', files[0])
+
+            // 创建xhl对象,请求对象，发送请求
+            var xhl = new XMLHttpRequest();
+
+            // 显示上传进度，需绑定事件
+            xhl.upload.onprogress = function(e) {
+                // 计算进度是否可计算
+                if(e.lengthComputable) {
+                    var percentComplete = Math.ceil(e.loaded / e.total * 100);
+                    // 获取进度条对象，动态赋值进度条宽度
+                    $('#percent').attr('style','width:'+ percentComplete +'%').html(percentComplete + '%');
+
+                }
+            }
+
+            // 监听上传完成事件，改变进度条状态
+            xhl.upload.onload = function() {
+                // 移除所有类，并添加相对应的类
+                $('#percent').removeClass().addClass('progress-bar progress-bar-success')
+            }
+
+            xhl.open('POST','http://www.liulongbin.top:3006/api/upload/avatar');
+            xhl.send(data);
+            xhl.onreadystatechange = function() {
+                if(xhl.readyState === 4 && xhl.status === 200) {
+                    // 服务器响应数据,并返回一个字符串形式，转为JSON对象
+                    data = JSON.parse(xhl.responseText);
+                    console.log(typeof data);
+                    console.log(data);
+                    if(data.status === 200) {
+                        // 响应数据成功,给img标签赋值，是图片在网页显示
+                        document.querySelector('#img').src = 'http://www.liulongbin.top:3006' + data.url;
+                    }else {
+                        console.log(data.message);
+                    }
+                }
+            }
+
+        })
+    </script>
+</body>
+</html>

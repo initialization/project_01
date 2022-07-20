@@ -1,0 +1,71 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Document</title>
+</head>
+<body>
+    <form id="form1">
+        <input type="text">
+        <input type="password">
+        <button type="submit"></button>
+    </form>
+    <script>
+        // var xhr = new XMLHttpRequest();
+
+        // // 设置超时时间
+        // xhr.timeout = 300;
+        // xhr.ontimeout = function() {
+        //     console.log('超时了！');
+        // }
+
+        // xhr.open('GET', 'http://www.liulongbin.top:3006/api/getbooks');
+        // xhr.send();
+        // xhr.onreadystatechange = function() {
+        //     if(xhr.readyState === 4 && xhr.status === 200) {
+        //         console.log(xhr.responseText);
+        //     }
+        // }
+
+        // formData提交表单
+        // var data = new FormData();
+        // // 追加表单数据
+        // data.append('u_name','libia');
+        // data.append('u_pwd', '123');
+
+        // var xhl = new XMLHttpRequest();
+        // xhl.open('POST','http://www.liulongbin.top:3006/api/formdata');
+        // // 发送请求
+        // xhl.send(data);
+
+        // xhl.onreadystatechange = function() {
+        //     if(xhl.readyState === 4 && xhl.status === 200){
+        //         console.log(JSON.parse(xhl.responseText));
+        //     }
+        // }
+
+        // 1、通过fromData表单拿到网页表单的值
+        // 2、通过DOM操作来获取表单元素
+        var form1 = document.querySelector('#form1');
+        // 给表单绑定提交按钮点击事件
+        form1.addEventListener('submit', function(e) {
+            // 阻止表单默认提交
+            e.preventDefault();
+            // 3、创建fromData表单对象,并传入参数
+            var data = new FormData(form1);
+            // 4、创建xhl对象
+            var xhl = new XMLHttpRequest();
+                xhl.open('POST','http://www.liulongbin.top:3006/api/formdata');
+                xhl.send(data);
+
+                xhl.onreadystatechange = function() {
+                    if(xhl.readyState === 4 && xhl.status === 200){
+                        console.log(JSON.parse(xhl.responseText));
+                    }
+            }
+        })
+    </script>
+</body>
+</html>
